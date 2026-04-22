@@ -12,12 +12,14 @@ import uuid
 from datetime import datetime, timezone
 import resend
 
+import certifi
+
 ROOT_DIR = Path(__file__).parent
 load_dotenv(ROOT_DIR / ".env")
 
 # MongoDB
 mongo_url = os.environ["MONGO_URL"]
-client = AsyncIOMotorClient(mongo_url)
+client = AsyncIOMotorClient(mongo_url, tlsCAFile=certifi.where())
 db = client[os.environ["DB_NAME"]]
 
 # Resend
@@ -183,10 +185,13 @@ async def waitlist_count():
 
 app.include_router(api_router)
 
+cors_origins_str = os.environ.get("CORS_ORIGINS", "*")
+allow_origins = cors_origins_str.split(",") if cors_origins_str != "*" else ["*"]
+
 app.add_middleware(
     CORSMiddleware,
-    allow_credentials=True,
-    allow_origins=os.environ.get("CORS_ORIGINS", "*").split(","),
+    allow_credentials=False if allow_origins == ["*"] else True,
+    allow_origins=allow_origins,
     allow_methods=["*"],
     allow_headers=["*"],
 )
