@@ -185,13 +185,10 @@ async def waitlist_count():
 
 app.include_router(api_router)
 
-cors_origins_str = os.environ.get("CORS_ORIGINS", "*")
-allow_origins = cors_origins_str.split(",") if cors_origins_str != "*" else ["*"]
-
 app.add_middleware(
     CORSMiddleware,
-    allow_credentials=False if allow_origins == ["*"] else True,
-    allow_origins=allow_origins,
+    allow_credentials=False,
+    allow_origins=["*"],
     allow_methods=["*"],
     allow_headers=["*"],
 )
