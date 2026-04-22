@@ -1,0 +1,212 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+    --ink: #0a0a0a;
+    --paper: #f5f0e8;
+    --paper-2: #efe7d6;
+    --accent: #ff4500;
+    --accent-soft: #ff9d6f;
+    --gold: #c8a951;
+    --muted: #6b6358;
+    --code-bg: #1a1814;
+    --code-text: #e8d9b0;
+}
+
+html,
+body {
+    margin: 0;
+    padding: 0;
+    background: var(--paper);
+    color: var(--ink);
+    font-family: "DM Mono", ui-monospace, SFMono-Regular, Menlo, monospace;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    overflow-x: hidden;
+}
+
+::selection {
+    background: var(--accent);
+    color: var(--paper);
+}
+
+.font-display {
+    font-family: "Bebas Neue", Impact, sans-serif;
+    letter-spacing: 0.02em;
+}
+.font-serif-i {
+    font-family: "Instrument Serif", Georgia, serif;
+}
+.font-mono {
+    font-family: "DM Mono", ui-monospace, monospace;
+}
+
+/* Paper grain texture */
+.paper-grain {
+    position: relative;
+}
+.paper-grain::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+    background-image: radial-gradient(
+        rgba(10, 10, 10, 0.06) 1px,
+        transparent 1px
+    );
+    background-size: 3px 3px;
+    mix-blend-mode: multiply;
+    opacity: 0.35;
+    z-index: 0;
+}
+
+/* Marquee */
+@keyframes marquee {
+    0% {
+        transform: translateX(0);
+    }
+    100% {
+        transform: translateX(-50%);
+    }
+}
+.marquee-track {
+    animation: marquee 28s linear infinite;
+}
+
+/* Cursor blink */
+@keyframes blink {
+    0%,
+    50% {
+        opacity: 1;
+    }
+    51%,
+    100% {
+        opacity: 0;
+    }
+}
+.caret::after {
+    content: "▌";
+    margin-left: 4px;
+    animation: blink 1s steps(1) infinite;
+    color: var(--accent);
+}
+
+/* Stamp */
+.stamp {
+    display: inline-block;
+    border: 2px solid var(--accent);
+    color: var(--accent);
+    padding: 6px 14px;
+    text-transform: uppercase;
+    font-family: "DM Mono", monospace;
+    font-size: 12px;
+    font-weight: 500;
+    letter-spacing: 0.2em;
+    transform: rotate(-3deg);
+    background: rgba(255, 69, 0, 0.04);
+}
+
+/* Noise overlay for 3D canvas */
+.noise-overlay {
+    pointer-events: none;
+    position: absolute;
+    inset: 0;
+    background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='160' height='160'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2'/><feColorMatrix values='0 0 0 0 0  0 0 0 0 0  0 0 0 0 0  0 0 0 0.08 0'/></filter><rect width='100%' height='100%' filter='url(%23n)'/></svg>");
+    mix-blend-mode: multiply;
+    opacity: 0.6;
+}
+
+/* Hard shadow */
+.hard-shadow {
+    box-shadow: 8px 8px 0 0 var(--ink);
+}
+.hard-shadow-accent {
+    box-shadow: 8px 8px 0 0 var(--accent);
+}
+
+/* Scroll indicator */
+@keyframes scrollDown {
+    0% {
+        transform: translateY(0);
+        opacity: 0;
+    }
+    30% {
+        opacity: 1;
+    }
+    100% {
+        transform: translateY(14px);
+        opacity: 0;
+    }
+}
+.scroll-dot {
+    animation: scrollDown 1.6s ease-in-out infinite;
+}
+
+/* Button press */
+.btn-primary {
+    background: var(--ink);
+    color: var(--paper);
+    border: 2px solid var(--ink);
+    padding: 14px 26px;
+    text-transform: uppercase;
+    letter-spacing: 0.12em;
+    font-family: "DM Mono", monospace;
+    font-weight: 500;
+    transition:
+        transform 120ms ease,
+        box-shadow 120ms ease,
+        background 120ms ease;
+    box-shadow: 6px 6px 0 0 var(--accent);
+    cursor: pointer;
+}
+.btn-primary:hover {
+    transform: translate(-2px, -2px);
+    box-shadow: 8px 8px 0 0 var(--accent);
+    background: var(--accent);
+    border-color: var(--accent);
+}
+.btn-primary:active {
+    transform: translate(4px, 4px);
+    box-shadow: 2px 2px 0 0 var(--accent);
+}
+.btn-primary:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+}
+
+/* Input */
+.paper-input {
+    background: transparent;
+    border: 2px solid var(--ink);
+    padding: 14px 18px;
+    font-family: "DM Mono", monospace;
+    color: var(--ink);
+    outline: none;
+    width: 100%;
+}
+.paper-input::placeholder {
+    color: var(--muted);
+}
+.paper-input:focus {
+    border-color: var(--accent);
+    box-shadow: 4px 4px 0 0 var(--accent);
+    transform: translate(-2px, -2px);
+}
+
+/* Section divider */
+.sec-divider {
+    border-top: 1px dashed rgba(10, 10, 10, 0.25);
+}
+
+/* Tilt wrapper transition */
+.tilt-card {
+    transition:
+        transform 180ms ease,
+        box-shadow 180ms ease;
+    will-change: transform;
+}
+.tilt-card:hover {
+    transform: rotateX(6deg) rotateY(-6deg) translateY(-4px);
+    box-shadow: 14px 14px 0 0 var(--accent);
+}
