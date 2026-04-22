@@ -47,13 +47,15 @@ function Marquee() {
   const items = [
     "PORTFOLIOROASTER",
     "★",
-    "ANDROID CLOSED TESTING",
+    "COMING SOON",
     "★",
     "100% FREE",
     "★",
     "BRUTALLY HONEST AI",
     "★",
     "JOIN THE WAITLIST",
+    "★",
+    "EARLY ACCESS",
     "★",
   ];
   return (
@@ -98,7 +100,7 @@ function Hero({ count }) {
             <span>portfolioroaster</span>
           </div>
           <div className="hidden sm:block text-[#6b6358]">
-            [ coming soon — v0.1 ]
+            [ coming soon — april 2026 ]
           </div>
           <div className="text-[#6b6358]">
             {count != null ? `${count} on the list` : "—"}
@@ -107,7 +109,7 @@ function Hero({ count }) {
 
         {/* issue tag */}
         <div className="mt-16 sm:mt-20">
-          <span className="stamp">↗ closed beta · dec 2025</span>
+          <span className="stamp">↗ coming soon · april 2026</span>
         </div>
 
         {/* Title + scene */}
@@ -148,7 +150,7 @@ function Hero({ count }) {
             >
               <Badge>Android only</Badge>
               <Badge color="#0a0a0a">100% free</Badge>
-              <Badge color="#c8a951">Closed testing</Badge>
+              <Badge color="#c8a951">Early access</Badge>
             </motion.div>
 
             <motion.div
@@ -159,7 +161,7 @@ function Hero({ count }) {
             >
               <WaitlistForm source="hero" />
               <p className="mt-3 text-xs font-mono text-[#6b6358]">
-                We email you the Play Store closed-testing invite. No spam. Unsubscribe anytime.
+                We email you the early-access install link the moment your slot opens. No spam. Unsubscribe anytime.
               </p>
             </motion.div>
           </motion.div>
@@ -233,7 +235,7 @@ function Verdict() {
             {[
               { n: "5", l: "brutal callouts" },
               { n: "5", l: "exact fixes" },
-              { n: "∞", l: "free during beta" },
+              { n: "∞", l: "free · early access" },
             ].map((s, i) => (
               <motion.div
                 key={i}
@@ -300,8 +302,8 @@ function Features() {
     {
       icon: "🆓",
       tag: "Free",
-      title: "100% free during beta.",
-      body: "No paywall. No credit card. No 'upgrade to see results'. While we're in closed testing — every feature is unlocked.",
+      title: "100% free during early access.",
+      body: "No paywall. No credit card. No 'upgrade to see results'. While we're in early access — every feature is unlocked.",
     },
   ];
 
@@ -520,15 +522,15 @@ function FAQ() {
   const faqs = [
     {
       q: "Is it really free?",
-      a: "Yes — 100% free during closed testing. Every feature is unlocked while we collect feedback. If we ever add a paid tier later, anyone who joined the waitlist keeps free access for the beta period.",
+      a: "Yes — 100% free during early access. Every feature is unlocked while we collect feedback. If we ever add a paid tier later, anyone who joined the waitlist keeps free access for the early-access period.",
     },
     {
       q: "Why Android only?",
       a: "We shipped Android first because it's fastest to iterate on and our first testers are on Android. iOS is next — put your email in the waitlist and you'll get pinged the moment it's live.",
     },
     {
-      q: "How do I get the closed-testing link?",
-      a: "Join the waitlist with your email. We approve testers in small batches via Google Play Console. You'll get an email with the opt-in link and install instructions.",
+      q: "How do I get access?",
+      a: "Join the waitlist with your email. We'll email you the early-access install link the moment a slot opens up. No forms to fill, no hoops to jump through.",
     },
     {
       q: "Is my portfolio data stored?",
@@ -541,6 +543,10 @@ function FAQ() {
     {
       q: "Can I roast someone else's portfolio?",
       a: "Technically yes. Morally? That's between you and your group chat. We don't judge.",
+    },
+    {
+      q: "Who built this?",
+      a: "PortfolioRoaster is built with love by XenithHQ. Got a question, partnership idea, or just want to say hi? Reach out at contact@pixelbond.in or xenithfounders@gmail.com.",
     },
   ];
 
@@ -623,17 +629,35 @@ function FinalCTA({ count }) {
 function Footer() {
   return (
     <footer className="bg-[#0a0a0a] text-[#f5f0e8] py-10">
-      <div className="max-w-7xl mx-auto px-6 sm:px-10 flex flex-col md:flex-row items-start md:items-center justify-between gap-4">
+      <div className="max-w-7xl mx-auto px-6 sm:px-10 flex flex-col md:flex-row items-start md:items-center justify-between gap-6">
         <div>
           <div className="font-display text-2xl text-[#ff4500]">PORTFOLIOROASTER</div>
           <div className="font-mono text-[11px] uppercase tracking-[0.25em] text-[#6b7280] mt-1">
-            © {new Date().getFullYear()} — built with spite & coffee
+            © {new Date().getFullYear()} — built with{" "}
+            <span className="text-[#ff4500]">♥</span> by XenithHQ
           </div>
         </div>
-        <div className="flex gap-6 font-mono text-xs uppercase tracking-[0.2em]">
-          <a href="#features" className="hover:text-[#ff4500]" data-testid="footer-features">Features</a>
-          <a href="#faq" className="hover:text-[#ff4500]" data-testid="footer-faq">FAQ</a>
-          <a href="mailto:hello@portfolioroaster.app" className="hover:text-[#ff4500]" data-testid="footer-contact">Contact</a>
+        <div className="flex flex-col sm:flex-row gap-4 sm:gap-6 font-mono text-xs uppercase tracking-[0.2em]">
+          <a href="#features" className="hover:text-[#ff4500]" data-testid="footer-features">
+            Features
+          </a>
+          <a href="#faq" className="hover:text-[#ff4500]" data-testid="footer-faq">
+            FAQ
+          </a>
+          <a
+            href="mailto:contact@pixelbond.in"
+            className="hover:text-[#ff4500] normal-case tracking-normal"
+            data-testid="footer-contact-pixelbond"
+          >
+            contact@pixelbond.in
+          </a>
+          <a
+            href="mailto:xenithfounders@gmail.com"
+            className="hover:text-[#ff4500] normal-case tracking-normal"
+            data-testid="footer-contact-xenith"
+          >
+            xenithfounders@gmail.com
+          </a>
         </div>
       </div>
     </footer>

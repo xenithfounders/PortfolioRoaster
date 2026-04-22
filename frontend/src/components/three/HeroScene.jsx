@@ -1,55 +1,38 @@
 import { Suspense, useRef, createElement as h } from "react";
 import { Canvas, useFrame } from "@react-three/fiber";
-import { Float, Environment, ContactShadows, RoundedBox } from "@react-three/drei";
+import {
+  Float,
+  Environment,
+  ContactShadows,
+  RoundedBox,
+  useTexture,
+} from "@react-three/drei";
 
 /**
- * We build EVERY lowercase R3F primitive via React.createElement because the
- * visual-edits babel plugin injects `x-line-number` on lowercase JSX elements,
- * and R3F's prop resolver then tries to walk `x.line.number` on Three objects.
+ * Every lowercase R3F primitive is built via React.createElement so the
+ * visual-edits babel plugin cannot inject `x-line-number` attrs that R3F's
+ * applyProps would try to walk as `x.line.number` on Three.js objects.
+ * (Belt-and-braces: the runtime shim in src/lib/r3f-compat.js also strips.)
  */
 
 const el = h;
 
-function PhoneScreenContent() {
-  const z = 0.13;
-  const row = (i) =>
-    el(
-      "group",
-      { position: [0, -0.55 - i * 0.4, z], key: `row-${i}` },
-      el("mesh", { position: [-0.7, 0, 0] },
-        el("circleGeometry", { args: [0.06, 20] }),
-        el("meshBasicMaterial", { color: "#ff4500" })),
-      el("mesh", { position: [0.1, 0.04, 0] },
-        el("planeGeometry", { args: [1.3, 0.05] }),
-        el("meshBasicMaterial", { color: "#0a0a0a" })),
-      el("mesh", { position: [0.0, -0.06, 0] },
-        el("planeGeometry", { args: [1.1, 0.035] }),
-        el("meshBasicMaterial", { color: "#6b6358" })),
-    );
+function PhoneScreen({ textureUrl = "/app-preview.jpeg" }) {
+  const tex = useTexture(textureUrl);
+  // Screen size: 1.8 × 3.75 (matches the phone body inset)
   return el(
-    "group",
-    null,
-    el("mesh", { position: [0, 1.65, z] },
-      el("planeGeometry", { args: [1.5, 0.06] }),
-      el("meshBasicMaterial", { color: "#0a0a0a" })),
-    el("mesh", { position: [0, 1.1, z] },
-      el("planeGeometry", { args: [1.3, 0.1] }),
-      el("meshBasicMaterial", { color: "#6b6358" })),
-    el("mesh", { position: [-0.35, 0.3, z] },
-      el("planeGeometry", { args: [0.8, 0.9] }),
-      el("meshBasicMaterial", { color: "#ff4500" })),
-    el("mesh", { position: [0.5, 0.15, z] },
-      el("planeGeometry", { args: [0.55, 0.25] }),
-      el("meshBasicMaterial", { color: "#0a0a0a" })),
-    el("mesh", { position: [0, -0.25, z] },
-      el("planeGeometry", { args: [1.4, 0.02] }),
-      el("meshBasicMaterial", { color: "#0a0a0a" })),
-    row(0),
-    row(1),
-    row(2),
-    el("mesh", { position: [0, -1.75, z] },
-      el("planeGeometry", { args: [1.3, 0.25] }),
-      el("meshBasicMaterial", { color: "#ff4500" })),
+    "mesh",
+    { position: [0, 0, 0.12] },
+    el("planeGeometry", { args: [1.8, 3.75] }),
+    el("meshStandardMaterial", {
+      map: tex,
+      emissive: "#ffffff",
+      emissiveMap: tex,
+      emissiveIntensity: 0.55,
+      roughness: 0.35,
+      metalness: 0.0,
+      toneMapped: false,
+    }),
   );
 }
 
@@ -74,15 +57,7 @@ function Phone({ position = [0, 0, 0] }) {
         metalness: 0.6,
       }),
     ),
-    el("mesh", { position: [0, 0, 0.12] },
-      el("planeGeometry", { args: [1.8, 3.75] }),
-      el("meshStandardMaterial", {
-        color: "#f5f0e8",
-        emissive: "#f5f0e8",
-        emissiveIntensity: 0.3,
-        roughness: 0.9,
-      })),
-    el(PhoneScreenContent, null),
+    el(PhoneScreen, null),
   );
 }
 
@@ -98,9 +73,17 @@ function Blob({ position, color = "#ff4500", scale = 1, speed = 1 }) {
   return el(
     Float,
     { speed: 2, rotationIntensity: 0.6, floatIntensity: 1.2 },
-    el("mesh", { ref, position, scale, castShadow: true },
+    el(
+      "mesh",
+      { ref, position, scale, castShadow: true },
       el("icosahedronGeometry", { args: [0.6, 1] }),
-      el("meshStandardMaterial", { color, roughness: 0.25, metalness: 0.2, flatShading: true })),
+      el("meshStandardMaterial", {
+        color,
+        roughness: 0.25,
+        metalness: 0.2,
+        flatShading: true,
+      }),
+    ),
   );
 }
 
@@ -116,9 +99,12 @@ function Torus({ position, color = "#c8a951" }) {
   return el(
     Float,
     { speed: 1.4, rotationIntensity: 0.4, floatIntensity: 0.8 },
-    el("mesh", { ref, position, castShadow: true },
+    el(
+      "mesh",
+      { ref, position, castShadow: true },
       el("torusGeometry", { args: [0.55, 0.18, 20, 60] }),
-      el("meshStandardMaterial", { color, roughness: 0.5, metalness: 0.3 })),
+      el("meshStandardMaterial", { color, roughness: 0.5, metalness: 0.3 }),
+    ),
   );
 }
 
@@ -141,12 +127,20 @@ export default function HeroScene() {
       "shadow-mapSize-width": 1024,
       "shadow-mapSize-height": 1024,
     }),
-    el("directionalLight", { position: [-4, -3, -2], intensity: 0.3, color: "#ff4500" }),
+    el("directionalLight", {
+      position: [-4, -3, -2],
+      intensity: 0.3,
+      color: "#ff4500",
+    }),
+
     el(
       Suspense,
       { fallback: null },
-      el(Float, { speed: 1.2, rotationIntensity: 0.3, floatIntensity: 0.6 },
-        el(Phone, { position: [0, 0, 0] })),
+      el(
+        Float,
+        { speed: 1.2, rotationIntensity: 0.3, floatIntensity: 0.6 },
+        el(Phone, { position: [0, 0, 0] }),
+      ),
       el(Blob, { position: [-2.6, 1.4, -1], color: "#ff4500", scale: 0.9, speed: 0.8 }),
       el(Blob, { position: [2.4, -1.3, -1.5], color: "#0a0a0a", scale: 0.7, speed: 1.3 }),
       el(Blob, { position: [2.8, 1.7, -2], color: "#ff9d6f", scale: 0.5, speed: 1.6 }),
